@@ -1,27 +1,10 @@
-import "dotenv/config";
-import express from "express";
+import { app } from "./app";
+import { addNewAlias } from "./db";
 
 const port = process.env.PORT;
 const domain = process.env.DOMAIN;
-const app = express();
 
-app.use(express.static(__dirname + "/views"));
-app.set("views", __dirname + "/views");
-app.set("view engine", "html");
-
-// API Skeleton
-app.get("/", (_, res) => {
-  res.render("index.html");
-});
-
-app.post("/", (_, res) => {
-  res.json({ message: "invalid form" });
-});
-
-app.get("/alias", (_, res) => {
-  res.redirect("/");
-});
-
-app.listen(port, () => {
+app.listen(port, async () => {
+  await addNewAlias("fb", "https://www.facebook.com");
   return console.log(`Server is listening at http://${domain}:${port}`);
 });
