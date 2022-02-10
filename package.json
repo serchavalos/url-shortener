@@ -1,0 +1,29 @@
+{
+  "name": "url-shortner",
+  "version": "0.0.1",
+  "description": "Provides a service for submitting aliases for URLs",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "copy-views": "copyfiles -f -u 1 src/**/*.html dist/views/",
+    "lint": "eslint src --ext .ts",
+    "prestart": "npm run clean && npm run copy-views",
+    "start": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sergio Avalos <sergio.avalos@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "@typescript-eslint/parser": "^5.11.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.8.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2"
+  }
+}
