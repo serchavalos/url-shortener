@@ -9,7 +9,7 @@
     "lint": "eslint src --ext .ts",
     "prestart": "npm run clean && npm run copy-views",
     "start": "tsc && node dist/index.js",
-    "test": "jest --testTimeout=10000"
+    "test": "jest --testTimeout=10000 --watch"
   },
   "author": "Sergio Avalos <sergio.avalos@gmail.com>",
   "license": "ISC",
