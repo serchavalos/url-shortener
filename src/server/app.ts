@@ -9,7 +9,7 @@ import { validateURL } from "./utils/url";
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/views"));
 app.set("views", __dirname + "/views");
 app.set("view engine", "html");
