@@ -33,7 +33,7 @@ app.post("/api/url", async (req, res) => {
     });
   }
   const alreadyRegisteredUrl = await getUrlByAlias(alias);
-  if (alreadyRegisteredUrl) {
+  if (alreadyRegisteredUrl !== null) {
     return res.status(400).json({
       message: "Alias parameter has already been registered",
     });

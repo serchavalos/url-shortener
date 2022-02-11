@@ -22,22 +22,75 @@
     </style>
   </head>
   <h1>URL Shortener</h1>
-  <form action="/api/url" method="get">
+  <form action="/api/url" method="post">
     <fieldset>
       <legend>
         Provide an alias for a URL you wouldl like to be redirected
       </legend>
       <div>
         <label for="url">URL:</label>
-        <input type="text" name="url" id="url" required />
+        <input
+          type="text"
+          name="url"
+          id="url"
+          required
+          pattern="^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$"
+        />
       </div>
       <div>
         <label for="alias">Alias (optional):</label>
-        <input type="text" name="alias" id="alias" required />
+        <input
+          type="text"
+          name="alias"
+          id="alias"
+          pattern="^[a-zA-Z0-9\-_]+$"
+        />
       </div>
       <div>
         <input type="submit" value="Register" />
       </div>
     </fieldset>
+    <div id="result-container"></div>
   </form>
+  <script>
+    (() => {
+      const urlInput = document.querySelector('form input[name="url"]');
+      const aliasInput = document.querySelector('form input[name="alias"]');
+      const submitButton = document.querySelector('form input[type="submit"]');
+      const resultsDiv = document.getElementById("result-container");
+
+      document.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const { action, method } = form;
+        const body = new URLSearchParams(new FormData(form));
+
+        const previousSubmitText = submitButton.value;
+        submitButton.value = "Registering...";
+        submitButton.disabled = true;
+
+        fetch(action, { method, body })
+          .then((res) => res.json())
+          .then((res) => {
+            const { url, alias } = res.message;
+            if (!url || !alias) {
+              throw new Error(res.message);
+            }
+            [aliasInput, urlInput].map((input) => (input.value = ""));
+            submitButton.value = previousSubmitText;
+            submitButton.disabled = false;
+
+            resultsDiv.innerHTML =
+              `<p>New alias has been registered!</p>` +
+              `<p>Visiting to <a href="https://localhost/${alias}">https://localhost/${alias}</a> will redirect you to ${url}`;
+          })
+          .catch((error) => {
+            submitButton.value = previousSubmitText;
+            submitButton.disabled = false;
+
+            resultsDiv.innerHTML = `<p>Oopsy... there was a problem</p><p>Details: ${error}`;
+          });
+      });
+    })();
+  </script>
 </html>
