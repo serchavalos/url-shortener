@@ -19,49 +19,44 @@ app.get("/", (_, res) => {
 });
 
 app.post("/api/url", async (req, res) => {
-  /**
--[x] Accepts values URL(required), Alias(optional)
--[x] If Alias is not provided, a short unique name should be generated
--[x] Normalizes URL and Alias by trimming spaces and changing case to lower
--[x] Checks URL & Alias for correctness
--[x] Saves URL & Alias to a database
--[x] Returns JSON object with URL & Alias
--[x] If operation was not successful, respond with appropriate HTTP status code and message
--[ ] Checks that Alias is unique
--[ ] Add an integration test
-*/
   const url = normalize(req.body.url || "");
   if (!url || !validateURL(url)) {
-    res.status(400).json({ message: "URL parameter is invalid and required" });
+    return res
+      .status(400)
+      .json({ message: "URL parameter is invalid and required" });
   }
 
   const alias = req.body.alias ? normalize(req.body.alias) : generateAlias();
   if (!validateAlias(alias)) {
-    res.status(400).json({
-      status: "error",
+    return res.status(400).json({
       message: "Alias parameter is invalid",
+    });
+  }
+  const alreadyRegisteredUrl = await getUrlByAlias(alias);
+  if (alreadyRegisteredUrl) {
+    return res.status(400).json({
+      message: "Alias parameter has already been registered",
     });
   }
 
   try {
     await addNewAlias(alias, url);
-    res.status(201).json({ message: { url, alias } });
+    return res.status(201).json({ message: { url, alias } });
   } catch (err) {
-    // REVIEW: In production you don't want to return the error details
-    res
+    return res
       .status(500)
-      .json({ message: `Unable to persist this alias. Detals: ${err}` });
+      .json({ message: `Unable to persist this alias. Details: ${err}` });
   }
 });
 
 app.get("/:alias", async (req, res) => {
   const { alias } = req.params;
-  try {
-    const url = await getUrlByAlias(alias);
-    return res.redirect(url);
-  } catch (_) {
+  const url = await getUrlByAlias(alias);
+  if (!url) {
     return res.status(404).send("Alias does not exist");
   }
+
+  return res.redirect(url);
 });
 
 export { app };

@@ -9,7 +9,11 @@
     "lint": "eslint src --ext .ts",
     "prestart": "npm run clean && npm run copy-views",
     "start": "tsc && node dist/index.js",
-    "test": "jest --testTimeout=10000 --watch"
+    "test:unit": "jest src",
+    "test:unit:watch": "npm test:unit -- --watch",
+    "test:integration": "jest --testTimeout=10000 tests/integration",
+    "test:integration:watch": "npm test:integration -- --watch",
+    "test": "npm test:unit && npm test:integration"
   },
   "author": "Sergio Avalos <sergio.avalos@gmail.com>",
   "license": "ISC",

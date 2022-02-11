@@ -11,11 +11,14 @@ db.serialize(() => {
   );
 });
 
-function getUrlByAlias(alias: string): Promise<string> {
+function getUrlByAlias(alias: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
     db.get("SELECT url FROM urls WHERE alias = ?", [alias], (err, row) => {
-      if (err || !row) {
+      if (err) {
         return reject("url not found");
+      }
+      if (!row) {
+        return resolve(null);
       }
       return resolve(row.url);
     });
