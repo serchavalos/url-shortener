@@ -8,50 +8,107 @@
       content="Provides a service for submitting aliases for URLs"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
+        font-family: "Caveat", cursive;
+      }
+      h1 {
+        text-align: center;
+      }
+      main {
+        margin: auto;
+        max-width: 500px;
+      }
+      legend {
+        background-color: #726b6b;
+        padding: 0.5em;
+        border-radius: 5px;
       }
       fieldset {
-        max-width: 400px;
-        padding: 0.5rem;
+        padding: 0.5em;
+        display: block;
       }
-      fieldset div {
-        margin-bottom: 0.5rem;
+      .form-row {
+        display: flex;
+        flex: 1;
+        margin-bottom: 1em;
+      }
+      .form-row label,
+      .form-row input {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        padding-right: 1em;
+      }
+      .form-row input {
+        border-radius: 5px;
+        padding: 10px;
+        width: 100%;
+        margin: 0;
+        border: 1px solid;
+      }
+      .form-row input[type="submit"] span {
+        text-align: center;
+      }
+      #result-container {
+        visibility: hidden;
+      }
+      #result-container.success,
+      #result-container.error {
+        visibility: visible;
+      }
+      #result-container.success {
+        border: 1px solid green;
+      }
+      #result-container.error {
+        border: 1px solid red;
+      }
+      #result-container p {
+        margin: 0;
+        padding: 0;
       }
     </style>
   </head>
   <h1>URL Shortener</h1>
-  <form action="/api/url" method="post">
-    <fieldset>
-      <legend>
-        Provide an alias for a URL you wouldl like to be redirected
-      </legend>
-      <div>
-        <label for="url">URL:</label>
-        <input
-          type="text"
-          name="url"
-          id="url"
-          required
-          pattern="^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$"
-        />
-      </div>
-      <div>
-        <label for="alias">Alias (optional):</label>
-        <input
-          type="text"
-          name="alias"
-          id="alias"
-          pattern="^[a-zA-Z0-9\-_]+$"
-        />
-      </div>
-      <div>
-        <input type="submit" value="Register" />
-      </div>
-    </fieldset>
-    <div id="result-container"></div>
-  </form>
+  <main>
+    <form action="/api/url" method="post">
+      <fieldset>
+        <legend>
+          Provide an alias for a URL you would like to be redirected
+        </legend>
+        <div class="form-row">
+          <label for="url">URL*</label>
+          <input
+            type="text"
+            name="url"
+            id="url"
+            required
+            pattern="^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$"
+          />
+        </div>
+        <div class="form-row">
+          <label for="alias">Alias</label>
+          <input
+            type="text"
+            name="alias"
+            id="alias"
+            pattern="^[a-zA-Z0-9\-_]+$"
+          />
+        </div>
+        <div class="form-row">
+          <input type="submit" value="Register" />
+        </div>
+      </fieldset>
+      <div id="result-container"></div>
+    </form>
+  </main>
   <script>
     (() => {
       const urlInput = document.querySelector('form input[name="url"]');
@@ -80,14 +137,18 @@
             submitButton.value = previousSubmitText;
             submitButton.disabled = false;
 
+            resultsDiv.classList.remove("error");
+            resultsDiv.classList.add("success");
             resultsDiv.innerHTML =
               `<p>New alias has been registered!</p>` +
-              `<p>Visiting to <a href="https://localhost/${alias}">https://localhost/${alias}</a> will redirect you to ${url}`;
+              `<p>Visiting to <a href="http://localhost:3000/${alias}" target="blank">https://localhost:3000/${alias}</a> will redirect you to ${url}`;
           })
           .catch((error) => {
             submitButton.value = previousSubmitText;
             submitButton.disabled = false;
 
+            resultsDiv.classList.remove("success");
+            resultsDiv.classList.add("error");
             resultsDiv.innerHTML = `<p>Oopsy... there was a problem</p><p>Details: ${error}`;
           });
       });
