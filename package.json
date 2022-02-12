@@ -10,11 +10,11 @@
     "prestart": "npm run clean && npm run copy-views",
     "start": "tsc && node dist/index.js",
     "test:unit": "jest src",
-    "test:unit:watch": "npm test:unit -- --watch",
+    "test:unit:watch": "npm run test:unit -- --watch",
     "test:integration": "jest tests/integration",
-    "test:integration:watch": "npm test:integration -- --watch",
+    "test:integration:watch": "npm run test:integration -- --watch",
     "test:e2e": "tsc && jest --config=jest.e2e.config.json tests/e2e  --testTimeout=10000",
-    "test": "npm test:unit && npm test:integration"
+    "test": "npm run test:unit && npm run test:integration"
   },
   "author": "Sergio Avalos <sergio.avalos@gmail.com>",
   "license": "ISC",
