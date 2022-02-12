@@ -19,7 +19,7 @@ describe("Server routes", () => {
       request(app)
         .get(`/fb`)
         .expect("Location", expectedLocation)
-        .expect(302, done);
+        .expect(301, done);
     });
 
     it("responds with a 404 when an unexistent alias is provided", (done) => {

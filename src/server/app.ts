@@ -56,7 +56,7 @@ app.get("/:alias", async (req, res) => {
     return res.status(404).send("Alias does not exist");
   }
 
-  return res.redirect(url);
+  return res.redirect(301, url);
 });
 
 export { app };

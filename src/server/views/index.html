@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>URL Shortener</title>
@@ -17,9 +17,10 @@
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
-        font-family: "Caveat", cursive;
+        font-size: 1.1em;
       }
       h1 {
+        font-family: "Caveat", cursive;
         text-align: center;
       }
       main {
@@ -27,7 +28,7 @@
         max-width: 500px;
       }
       legend {
-        background-color: #726b6b;
+        background-color: #ced0f8;
         padding: 0.5em;
         border-radius: 5px;
       }
@@ -36,39 +37,58 @@
         display: block;
       }
       .form-row {
-        display: flex;
-        flex: 1;
         margin-bottom: 1em;
       }
       .form-row label,
       .form-row input {
         display: flex;
-        flex-flow: row;
         align-items: center;
         padding-right: 1em;
       }
+      .form-row label > sub {
+        font-size: 0.8em;
+        margin-left: 0.25em;
+      }
       .form-row input {
         border-radius: 5px;
-        padding: 10px;
+        padding: 0.6em;
         width: 100%;
         margin: 0;
+        box-sizing: border-box;
         border: 1px solid;
       }
-      .form-row input[type="submit"] span {
-        text-align: center;
+      .form-row input:optional {
+        border: 1px solid;
+      }
+      .form-row input:required:invalid {
+        border: 1px solid #f44336;
+      }
+      .form-row input[type="submit"] {
+        font-size: inherit;
+        width: auto;
+        padding: 0.6em 1.25em;
+        margin: auto;
       }
       #result-container {
         visibility: hidden;
+        color: white;
+        padding: 1.25em;
+        opacity: 0.83;
+        border-radius: 5px;
+        margin: 0.9em 0;
+      }
+      #result-container a {
+        color: white;
       }
       #result-container.success,
       #result-container.error {
         visibility: visible;
       }
       #result-container.success {
-        border: 1px solid green;
+        background-color: #04aa6d;
       }
       #result-container.error {
-        border: 1px solid red;
+        background-color: #f44336;
       }
       #result-container p {
         margin: 0;
@@ -84,7 +104,7 @@
           Provide an alias for a URL you would like to be redirected
         </legend>
         <div class="form-row">
-          <label for="url">URL*</label>
+          <label for="url">URL</label>
           <input
             type="text"
             name="url"
@@ -94,7 +114,7 @@
           />
         </div>
         <div class="form-row">
-          <label for="alias">Alias</label>
+          <label for="alias">Alias<sub>(optional)</sub></label>
           <input
             type="text"
             name="alias"
@@ -140,7 +160,7 @@
             resultsDiv.classList.remove("error");
             resultsDiv.classList.add("success");
             resultsDiv.innerHTML =
-              `<p>New alias has been registered!</p>` +
+              `<strong>New alias has been registered!</strong>` +
               `<p>Visiting to <a href="http://localhost:3000/${alias}" target="blank">https://localhost:3000/${alias}</a> will redirect you to ${url}`;
           })
           .catch((error) => {
@@ -149,7 +169,7 @@
 
             resultsDiv.classList.remove("success");
             resultsDiv.classList.add("error");
-            resultsDiv.innerHTML = `<p>Oopsy... there was a problem</p><p>Details: ${error}`;
+            resultsDiv.innerHTML = `<p>Oopsy... there was a problem</p><p>${error}</p>`;
           });
       });
     })();
